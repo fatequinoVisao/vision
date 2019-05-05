@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # COMO USAR
 # python recognize_faces_video.py --encodings encodings.pickle
 # python recognize_faces_video.py --encodings encodings.pickle --display 0
@@ -9,7 +11,7 @@ import face_recognition # lib que faz o reconhecimento facial
 import argparse # utilizado para parsear argumentos da linha de comando
 import imutils # funcoes matematicas
 import pickle # ler/escrever arquivos .pickle
-import time 
+import time
 import cv2 # OpenCV
 
 # declara e parseia os argumentos da linha de comando
@@ -22,7 +24,7 @@ ap.add_argument("-d", "--detection-method", type=str, default="hog",
 	help="modelo de deteccao facial a ser utilizado: `hog` ou `cnn`")
 args = vars(ap.parse_args())
 
-# carrega o arquivo contendo os dados de encoding facial 
+# carrega o arquivo contendo os dados de encoding facial
 print("[INFO] loading encodings...")
 data = pickle.loads(open(args["encodings"], "rb").read())
 
@@ -60,7 +62,7 @@ while True:
 
 		# verifica se encontrou algo
 		if True in matches:
-			# salva os indices de todas as faces encontradas 
+			# salva os indices de todas as faces encontradas
 			matchedIdxs = [i for (i, b) in enumerate(matches) if b]
 			counts = {}
 
@@ -72,7 +74,7 @@ while True:
 
 			# verifica qual face teve o maior numero de reconhecimentos
 			name = max(counts, key=counts.get)
-		
+
 		# adiciona na lista de nomes
 		names.append(name)
 

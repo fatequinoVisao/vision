@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # COMO USAR
 # python encode_faces.py --dataset dataset --encodings encodings.pickle
 
@@ -20,7 +21,7 @@ ap.add_argument("-d", "--detection-method", type=str, default="hog",
 	help="modelo de deteccao facial a ser utilizado: `hog` ou `cnn`")
 args = vars(ap.parse_args())
 
-# pega o caminho das imagens 
+# pega o caminho das imagens
 print("[INFO] quantifying faces...")
 imagePaths = list(paths.list_images(args["dataset"]))
 
