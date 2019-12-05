@@ -13,6 +13,8 @@ import imutils # funcoes matematicas
 import pickle # ler/escrever arquivos .pickle
 import time
 import cv2 # OpenCV
+import serial
+from datetime import datetime
 
 # declara e parseia os argumentos da linha de comando
 ap = argparse.ArgumentParser()
@@ -41,7 +43,7 @@ while True:
 	# converte o frame de BGR (ordem de canais de cores que o imutils/OpenCV usa) para RGB (utilizado pelo face_recognition)
 	# e redimensiona para 750px (melhor perfomance)
 	rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-	rgb = imutils.resize(frame, width=750)
+	rgb = imutils.resize(frame, width=300)
 	r = frame.shape[1] / float(rgb.shape[1])
 
 	# detecta as coordenadas (x, y) das caixas correspondentes aos rostos detectados
@@ -65,12 +67,15 @@ while True:
 			# salva os indices de todas as faces encontradas
 			matchedIdxs = [i for (i, b) in enumerate(matches) if b]
 			counts = {}
+			
+
 
 			# itera sobre os indices encontrados e instancia um dictionary
 			# com o numero de vezes que cada face foi encontrada
 			for i in matchedIdxs:
 				name = data["names"][i]
 				counts[name] = counts.get(name, 0) + 1
+				
 
 			# verifica qual face teve o maior numero de reconhecimentos
 			name = max(counts, key=counts.get)
@@ -92,6 +97,15 @@ while True:
 		y = top - 15 if top - 15 > 15 else top + 15
 		cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
 			0.75, (0, 255, 0), 2)
+		#Porta serial 
+		ser = serial.Serial("/dev/tty0",9600)
+		
+		if names!=(" "):
+			#serialização
+			ser.write(str(names)+datetime.now().strftime('%x,%H:%M:%S'))
+        	print(names,datetime.now().strftime('%x,%H:%M:%S'))
+        
+
 
 	# verifica se é para mostrar o video na tela
 	if args["display"] > 0:
@@ -101,7 +115,18 @@ while True:
 		# caso a letra `q` seja pressionada, encerra a execução do programa
 		if key == ord("q"):
 			break
-
+			
+		'''	
+		if key == ord("l"):
+			ser = serial.Serial("/dev/tty0",9600)
+			print (ser.portstr)
+			ser.write(str(names)+datetime.now().strftime('%x'))
+			
+			print(names,datetime.now().strftime('%x'))
+		
+			ser.close()
+		'''
 # dispose é sempre bom
+ser.close()
 cv2.destroyAllWindows()
 vs.stop()
